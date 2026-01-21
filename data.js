@@ -2,7 +2,7 @@ var APP_DATA = {
   "scenes": [
     {
       "id": "0-gemini_generated_image_2xh2hz2xh2hz2xh2-copy",
-      "name": "Gemini_Generated_Image_2xh2hz2xh2hz2xh2 copy",
+      "name": "Fireplace Demo",
       "levels": [
         {
           "tileSize": 256,
