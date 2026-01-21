@@ -82,8 +82,8 @@ var APP_DATA = {
       "infoHotspots": []
     },
     {
-      "id": "3-linked-view",
-      "name": "Linked View",
+      "id": "3-linked-basement",
+      "name": "Linked Basement",
       "levels": [
         {
           "tileSize": 256,
@@ -105,7 +105,54 @@ var APP_DATA = {
         "yaw": 0,
         "fov": 1.5707963267948966
       },
-      "linkHotspots": [],
+      "linkHotspots": [
+        {
+          "yaw": -0.10355966822876184,
+          "pitch": 0,
+          "rotation": 0,
+          "target": "4-linked-catwalk"
+        },
+        {
+          "yaw": 3.0853724824177053,
+          "pitch": 0.07396987980133396,
+          "rotation": 0,
+          "target": "4-linked-catwalk"
+        }
+      ],
+      "infoHotspots": []
+    },
+    {
+      "id": "4-linked-catwalk",
+      "name": "Linked Catwalk",
+      "levels": [
+        {
+          "tileSize": 256,
+          "size": 256,
+          "fallbackOnly": true
+        },
+        {
+          "tileSize": 512,
+          "size": 512
+        },
+        {
+          "tileSize": 512,
+          "size": 1024
+        }
+      ],
+      "faceSize": 720,
+      "initialViewParameters": {
+        "pitch": 0,
+        "yaw": 0,
+        "fov": 1.5707963267948966
+      },
+      "linkHotspots": [
+        {
+          "yaw": 0,
+          "pitch": 0,
+          "rotation": 0,
+          "target": "3-linked-basement"
+        }
+      ],
       "infoHotspots": []
     }
   ],
