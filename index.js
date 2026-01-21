@@ -25,6 +25,23 @@
   var panoElement = document.querySelector('#pano');
   var sceneNameElement = document.querySelector('#titleBar .sceneName');
   var sceneListElement = document.querySelector('#sceneList');
+  var sceneListUlInfo = sceneListElement.querySelector('.scenes');
+  
+  // Dynamically populate link list
+  data.scenes.forEach(function(sceneData) {
+     var link = document.createElement('a');
+     link.href = "javascript:void(0)";
+     link.className = "scene";
+     link.setAttribute('data-id', sceneData.id);
+     
+     var li = document.createElement('li');
+     li.className = "text";
+     li.textContent = sceneData.name;
+     
+     link.appendChild(li);
+     sceneListUlInfo.appendChild(link);
+  });
+
   var sceneElements = document.querySelectorAll('#sceneList .scene');
   var sceneListToggleElement = document.querySelector('#sceneListToggle');
   var autorotateToggleElement = document.querySelector('#autorotateToggle');
