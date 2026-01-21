@@ -1,7 +1,7 @@
 var APP_DATA = {
   "scenes": [
     {
-      "id": "0-gemini_generated_image_2xh2hz2xh2hz2xh2-copy",
+      "id": "0-fireplace-demo",
       "name": "Fireplace Demo",
       "levels": [
         {
