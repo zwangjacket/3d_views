@@ -1,77 +1,383 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <title>3D Space View</title>
   <meta charset="utf-8">
-  <meta name="viewport"
-    content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore immersive 3D panorama views - Choose your adventure">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    @-ms-viewport {
-      width: device-width;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.4;
+    }
+
+    .bg-animation::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.2) 0%, transparent 40%);
+      animation: rotateBg 30s linear infinite;
+    }
+
+    @keyframes rotateBg {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Header */
+    header {
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+
+    /* Main content */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 28px;
+      background: linear-gradient(180deg, #667eea, #764ba2);
+      border-radius: 2px;
+    }
+
+    /* Gallery grid */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    /* Scene card */
+    .scene-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .scene-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .scene-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .scene-card:hover::before {
+      opacity: 1;
+    }
+
+    .scene-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .scene-card:hover .scene-image {
+      transform: scale(1.1);
+    }
+
+    .scene-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.8) 100%);
+      pointer-events: none;
+    }
+
+    .scene-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      z-index: 2;
+    }
+
+    .scene-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .scene-description {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
+    }
+
+    .view-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .view-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .view-button svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .scene-card:hover .view-button svg {
+      transform: translateX(4px);
+    }
+
+    /* Badge for 360° */
+    .badge-360 {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .badge-360 svg {
+      width: 16px;
+      height: 16px;
+      animation: spin 8s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 2rem;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .scene-image {
+        height: 200px;
+      }
+
+      main {
+        padding: 1rem;
+      }
     }
   </style>
-  <link rel="stylesheet" href="vendor/reset.min.css">
-  <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="single-scene ">
+<body>
+  <div class="bg-animation"></div>
 
-  <div id="pano"></div>
+  <header>
+    <h1 class="logo">3D Space View</h1>
+    <p class="subtitle">Explore immersive 360° panoramic experiences</p>
+  </header>
 
-  <div id="sceneList">
-    <ul class="scenes">
+  <main>
+    <h2 class="section-title">Available Scenes</h2>
+    <div class="gallery" id="gallery">
+      <!-- Cards will be dynamically populated -->
+    </div>
+  </main>
 
-
-
-    </ul>
-  </div>
-
-  <div id="titleBar">
-    <h1 class="sceneName"></h1>
-  </div>
-
-  <a href="javascript:void(0)" id="autorotateToggle">
-    <img class="icon off" src="img/play.png">
-    <img class="icon on" src="img/pause.png">
-  </a>
-
-  <a href="javascript:void(0)" id="fullscreenToggle">
-    <img class="icon off" src="img/fullscreen.png">
-    <img class="icon on" src="img/windowed.png">
-  </a>
-
-  <a href="javascript:void(0)" id="sceneListToggle">
-    <img class="icon off" src="img/expand.png">
-    <img class="icon on" src="img/collapse.png">
-  </a>
-
-  <a href="javascript:void(0)" id="viewUp" class="viewControlButton viewControlButton-1">
-    <img class="icon" src="img/up.png">
-  </a>
-  <a href="javascript:void(0)" id="viewDown" class="viewControlButton viewControlButton-2">
-    <img class="icon" src="img/down.png">
-  </a>
-  <a href="javascript:void(0)" id="viewLeft" class="viewControlButton viewControlButton-3">
-    <img class="icon" src="img/left.png">
-  </a>
-  <a href="javascript:void(0)" id="viewRight" class="viewControlButton viewControlButton-4">
-    <img class="icon" src="img/right.png">
-  </a>
-  <a href="javascript:void(0)" id="viewIn" class="viewControlButton viewControlButton-5">
-    <img class="icon" src="img/plus.png">
-  </a>
-  <a href="javascript:void(0)" id="viewOut" class="viewControlButton viewControlButton-6">
-    <img class="icon" src="img/minus.png">
-  </a>
-
-  <script src="vendor/screenfull.min.js"></script>
-  <script src="vendor/bowser.min.js"></script>
-  <script src="vendor/marzipano.js"></script>
+  <footer>
+    <p>Click on any scene to start exploring in 360°</p>
+  </footer>
 
   <script src="data.js"></script>
-  <script src="index.js"></script>
+  <script>
+    (function () {
+      var gallery = document.getElementById('gallery');
+      var scenes = window.APP_DATA.scenes;
 
+      if (scenes.length === 0) {
+        gallery.innerHTML = `
+          <div class="empty-state">
+            <h3>No scenes available</h3>
+            <p>Add some 360° images to get started</p>
+          </div>
+        `;
+        return;
+      }
+
+      scenes.forEach(function (scene) {
+        var card = document.createElement('a');
+        card.className = 'scene-card';
+        card.href = 'viewer.html?scene=' + encodeURIComponent(scene.id);
+
+        // Use the preview image from tiles folder
+        var previewImage = 'tiles/' + scene.id + '/preview.jpg';
+
+        card.innerHTML = `
+          <div class="badge-360">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+            </svg>
+            360°
+          </div>
+          <img class="scene-image" src="${previewImage}" alt="${scene.name}" onerror="this.src='https://via.placeholder.com/400x250/1a1a2e/667eea?text=Preview+Not+Available'">
+          <div class="scene-overlay"></div>
+          <div class="scene-info">
+            <h3 class="scene-name">${scene.name}</h3>
+            <p class="scene-description">Click to explore this immersive space</p>
+            <span class="view-button">
+              Explore Now
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </div>
+        `;
+
+        gallery.appendChild(card);
+      });
+    })();
+  </script>
 </body>
 
 </html>
